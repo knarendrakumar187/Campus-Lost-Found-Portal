@@ -265,3 +265,22 @@ def found_item_detail(request, pk):
     }
     return render(request, 'lostfound/found_item_detail.html', context)
 
+@login_required
+def mark_found(request, pk):
+    """
+    Allow user to mark their lost item as found.
+    """
+    item = get_object_or_404(LostItem, pk=pk)
+    
+    # Check if user is the owner
+    if item.posted_by != request.user:
+        messages.error(request, "You are not authorized to edit this item.")
+        return redirect('lost_item_detail', pk=pk)
+        
+    if request.method == 'POST':
+        item.status = 'found'
+        item.save()
+        messages.success(request, "Great news! Your item has been marked as found.")
+        return redirect('lost_item_detail', pk=pk)
+        
+    return redirect('lost_item_detail', pk=pk)

@@ -5,33 +5,50 @@
 {% block content %}
 <div class="item-detail">
     <a href="{% url 'lost_items_list' %}" class="back-link">← Back to Lost Items</a>
-    
+
     <div class="detail-container">
         <div class="detail-image">
             {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}">
+            <img src="{{ item.image.url }}" alt="{{ item.title }}">
             {% else %}
-                <div class="no-image-large">No Image Available</div>
+            <div class="no-image-large">No Image Available</div>
             {% endif %}
         </div>
-        
+
         <div class="detail-info">
             <h1>{{ item.title }}</h1>
-            
+
             <div class="detail-meta">
                 <p><strong>Category:</strong> {{ item.get_category_display }}</p>
-                <p><strong>Status:</strong> <span class="status-{{ item.status }}">{{ item.get_status_display }}</span></p>
+                <p><strong>Status:</strong> <span class="status-{{ item.status }}">{{ item.get_status_display }}</span>
+                </p>
                 <p><strong>Location Lost:</strong> 📍 {{ item.location_lost }}</p>
                 <p><strong>Date Lost:</strong> {{ item.date_lost }}</p>
                 <p><strong>Posted by:</strong> {{ item.posted_by.username }}</p>
                 <p><strong>Posted on:</strong> {{ item.created_at|date:"F d, Y" }}</p>
             </div>
-            
+
             <div class="detail-description">
                 <h3>Description</h3>
                 <p>{{ item.description|linebreaks }}</p>
+
+                {% if request.user == item.posted_by and item.status == 'pending' %}
+                <div class="owner-actions"
+                    style="margin: 20px 0; padding: 15px; background: #e8f5e9; border-radius: 8px; border: 1px solid #c8e6c9;">
+                    <h4 style="margin-top: 0; color: #2e7d32;">Found your item?</h4>
+                    <p style="margin-bottom: 10px;">If you have found your item, please mark it as found to let everyone
+                        know!</p>
+                    <form action="{% url 'mark_found' item.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success"
+                            style="background: #2e7d32; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+                            ✅ I Found It!
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
-            
+
             <div class="contact-section">
                 <h3>Contact Information</h3>
                 <div class="contact-info" id="contact-info-{{ item.pk }}">
@@ -40,36 +57,37 @@
                 <p><small>Click on the email or phone number above to contact them directly!</small></p>
                 <div class="contact-buttons">
                     {% if item.posted_by.email %}
-                        <a href="mailto:{{ item.posted_by.email }}" class="btn btn-primary contact-btn">
-                            📧 Send Email
-                        </a>
+                    <a href="mailto:{{ item.posted_by.email }}" class="btn btn-primary contact-btn">
+                        📧 Send Email
+                    </a>
                     {% endif %}
-                    <button onclick="copyContactInfo('{{ item.contact_info|escapejs }}', this)" class="btn btn-secondary contact-btn">
+                    <button onclick="copyContactInfo('{{ item.contact_info|escapejs }}', this)"
+                        class="btn btn-secondary contact-btn">
                         📋 Copy Contact Info
                     </button>
                 </div>
             </div>
-            
+
             <script>
                 // Make contact info clickable
-                (function() {
+                (function () {
                     const contactDiv = document.getElementById('contact-info-{{ item.pk }}');
                     if (contactDiv) {
                         let text = contactDiv.innerHTML;
-                        
+
                         // Email pattern
                         const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
-                        text = text.replace(emailPattern, function(email) {
+                        text = text.replace(emailPattern, function (email) {
                             return '<a href="mailto:' + email + '" class="contact-link email-link">📧 ' + email + '</a>';
                         });
-                        
+
                         // Phone pattern
                         const phonePattern = /(\+?\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g;
-                        text = text.replace(phonePattern, function(phone) {
+                        text = text.replace(phonePattern, function (phone) {
                             const cleanPhone = phone.replace(/[^\d+]/g, '');
                             return '<a href="tel:' + cleanPhone + '" class="contact-link phone-link">📞 ' + phone.trim() + '</a>';
                         });
-                        
+
                         contactDiv.innerHTML = text;
                     }
                 })();
@@ -78,4 +96,3 @@
     </div>
 </div>
 {% endblock %}
-

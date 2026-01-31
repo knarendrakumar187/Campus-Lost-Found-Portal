@@ -32,7 +32,11 @@ urlpatterns = [
     path('found-items/', views.found_items_list, name='found_items_list'),
     
     # Item details
+    # Item details
     path('lost-item/<int:pk>/', views.lost_item_detail, name='lost_item_detail'),
     path('found-item/<int:pk>/', views.found_item_detail, name='found_item_detail'),
+    
+    # Actions
+    path('item/<int:pk>/mark-found/', views.mark_found, name='mark_found'),
 ]
 
