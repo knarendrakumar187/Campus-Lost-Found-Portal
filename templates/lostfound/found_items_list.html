@@ -1,0 +1,62 @@
+{% extends 'lostfound/base.html' %}
+
+{% block title %}Found Items{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); flex-wrap: wrap; gap: var(--spacing-md);">
+    <h2 style="margin: 0;">Found Items</h2>
+    {% if user.is_authenticated %}
+        <a href="{% url 'post_found' %}" class="btn btn-primary">+ Post Found Item</a>
+    {% endif %}
+</div>
+
+<!-- Search Form -->
+<div class="search-section">
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search by keyword..." value="{{ query }}" class="search-input">
+        <select name="category" class="search-select">
+            <option value="">All Categories</option>
+            <option value="electronics" {% if category == 'electronics' %}selected{% endif %}>Electronics</option>
+            <option value="clothing" {% if category == 'clothing' %}selected{% endif %}>Clothing</option>
+            <option value="books" {% if category == 'books' %}selected{% endif %}>Books</option>
+            <option value="accessories" {% if category == 'accessories' %}selected{% endif %}>Accessories</option>
+            <option value="documents" {% if category == 'documents' %}selected{% endif %}>Documents</option>
+            <option value="other" {% if category == 'other' %}selected{% endif %}>Other</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if query or category %}
+            <a href="{% url 'found_items_list' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Items Grid -->
+{% if items %}
+    <div class="items-grid">
+        {% for item in items %}
+            <a href="{% url 'found_item_detail' item.pk %}" class="item-card-link">
+                <div class="item-card">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                    {% else %}
+                        <div class="no-image">No Image</div>
+                    {% endif %}
+                    <div class="item-info">
+                        <h3>{{ item.title }}</h3>
+                        <p class="category">{{ item.get_category_display }}</p>
+                        <p class="location">📍 {{ item.location_found }}</p>
+                        <p class="date">Found on: {{ item.date_found }}</p>
+                        <p class="status">Status: <span class="status-{{ item.status }}">{{ item.get_status_display }}</span></p>
+                        <div class="view-details-btn">
+                            👁️ View Details & Contact →
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-results">No found items found. {% if query or category %}Try different search terms.{% endif %}</p>
+{% endif %}
+{% endblock %}
+

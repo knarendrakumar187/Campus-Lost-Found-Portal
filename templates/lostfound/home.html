@@ -1,0 +1,107 @@
+{% extends 'lostfound/base.html' %}
+
+{% block title %}Home - Campus Lost & Found{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to Campus Lost & Found Portal</h1>
+    <p>Find your lost items or help others find theirs!</p>
+    
+    {% if not user.is_authenticated %}
+        <div class="hero-buttons">
+            <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+            <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+        </div>
+    {% endif %}
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>📱 Post Lost Items</h3>
+        <p>Lost something? Post it here and let others help you find it.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'post_lost' %}" class="btn btn-primary">Post Lost Item</a>
+        {% endif %}
+    </div>
+    
+    <div class="feature-card">
+        <h3>🔍 Post Found Items</h3>
+        <p>Found something? Post it here to help the owner find it.</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'post_found' %}" class="btn btn-primary">Post Found Item</a>
+        {% endif %}
+    </div>
+    
+    <div class="feature-card">
+        <h3>🔎 Search Items</h3>
+        <p>Search through lost and found items by keyword or category.</p>
+        <a href="{% url 'lost_items_list' %}" class="btn btn-secondary">Browse Items</a>
+    </div>
+</div>
+
+<!-- Recent Items -->
+<div class="recent-items">
+    <h2>Recent Lost Items</h2>
+    {% if recent_lost %}
+        <div class="items-grid">
+            {% for item in recent_lost %}
+                <a href="{% url 'lost_item_detail' item.pk %}" class="item-card-link">
+                    <div class="item-card">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                        {% else %}
+                            <div class="no-image">No Image</div>
+                        {% endif %}
+                        <div class="item-info">
+                            <h3>{{ item.title }}</h3>
+                            <p class="category">{{ item.get_category_display }}</p>
+                            <p class="location">📍 {{ item.location_lost }}</p>
+                            <p class="date">Lost on: {{ item.date_lost }}</p>
+                            <div class="view-details-btn">
+                                👁️ View Details & Contact →
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No lost items yet.</p>
+    {% endif %}
+    
+    <a href="{% url 'lost_items_list' %}" class="btn btn-secondary">View All Lost Items</a>
+</div>
+
+<div class="recent-items">
+    <h2>Recent Found Items</h2>
+    {% if recent_found %}
+        <div class="items-grid">
+            {% for item in recent_found %}
+                <a href="{% url 'found_item_detail' item.pk %}" class="item-card-link">
+                    <div class="item-card">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}">
+                        {% else %}
+                            <div class="no-image">No Image</div>
+                        {% endif %}
+                        <div class="item-info">
+                            <h3>{{ item.title }}</h3>
+                            <p class="category">{{ item.get_category_display }}</p>
+                            <p class="location">📍 {{ item.location_found }}</p>
+                            <p class="date">Found on: {{ item.date_found }}</p>
+                            <div class="view-details-btn">
+                                👁️ View Details & Contact →
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No found items yet.</p>
+    {% endif %}
+    
+    <a href="{% url 'found_items_list' %}" class="btn btn-secondary">View All Found Items</a>
+</div>
+{% endblock %}
+

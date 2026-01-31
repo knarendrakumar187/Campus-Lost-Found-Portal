@@ -1,0 +1,67 @@
+{% extends 'lostfound/base.html' %}
+
+{% block title %}Post Lost Item{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Post a Lost Item</h2>
+    <p>Fill in the details about your lost item. Your post will appear after admin approval.</p>
+    
+    <form method="post" enctype="multipart/form-data" class="form">
+        <!-- enctype="multipart/form-data" is required for file uploads -->
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Title:</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error">{{ form.title.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="error">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Category:</label>
+            {{ form.category }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.location_lost.id_for_label }}">Location Lost:</label>
+            {{ form.location_lost }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.date_lost.id_for_label }}">Date Lost:</label>
+            {{ form.date_lost }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.image.id_for_label }}">Image (Optional):</label>
+            {{ form.image }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.contact_info.id_for_label }}">Contact Information:</label>
+            {{ form.contact_info }}
+            <small>How should people contact you? (Phone, email, etc.)</small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Lost Item</button>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+
