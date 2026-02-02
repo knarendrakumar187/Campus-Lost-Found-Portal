@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',      # Flash messages (built-in)
     'django.contrib.staticfiles',   # Static files (CSS, JS, images)
     'lostfound',                    # Our custom app for lost & found items
+    # Cloudinary for persistent media storage
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 # MIDDLEWARE: Components that process requests/responses
@@ -134,6 +137,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Where to find static files during development
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ---------------- Cloudinary Storage ----------------
+# When Cloudinary credentials are provided, store media & static files there.
+if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STATICFILES_STORAGE  = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+# ----------------------------------------------------
 
 # Media files (User uploaded files like images)
 MEDIA_URL = 'media/'
