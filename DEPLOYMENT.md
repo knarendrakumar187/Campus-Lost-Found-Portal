@@ -56,7 +56,7 @@ If you want a **public URL** that anyone can access, you need to deploy the proj
    - Connect GitHub repo
    - Choose "Web Service"
    - Build command: `pip install -r requirements.txt`
-   - Start command: `python manage.py migrate && python manage.py runserver 0.0.0.0:$PORT`
+   - Start command: `python manage.py migrate && python create_superuser.py && gunicorn campus_portal.wsgi:application`
 3. **Add environment variables:**
    - `SECRET_KEY`
    - `DEBUG=False`
