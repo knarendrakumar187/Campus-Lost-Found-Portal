@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Campus Lost & Found Portal{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/premium_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modern_style.css' %}">
 </head>
 
 <body>
@@ -63,15 +63,6 @@
             <p>&copy; 2026 Campus Lost & Found Portal. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- Bottom Mobile Navigation -->
-    <nav class="bottom-nav">
-        <a href="{% url 'home' %}" class="bn-link">🏠<span>Home</span></a>
-        <a href="{% url 'lost_items_list' %}" class="bn-link">🔍<span>Browse</span></a>
-        <a href="{% url 'post_lost' %}" class="bn-link bn-primary">➕<span>Post</span></a>
-        <a href="{% url 'found_items_list' %}" class="bn-link">🔔<span>Alerts</span></a>
-        <a href="{% url 'profile' %}" class="bn-link">👤<span>Profile</span></a>
-    </nav>
 
     <!-- JavaScript for Contact Features -->
     <script>
@@ -178,15 +169,7 @@
             align-items: center;
             gap: 0.5rem;
         }
-        /* Bottom Nav */
-        .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#1E1E22;padding:0.4rem 0;display:flex;justify-content:space-around;align-items:center;border-top:1px solid rgba(255,255,255,0.08);z-index:1000}
-        .bn-link{color:#A1A1AA;text-decoration:none;font-size:0.9rem;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color 0.2s}
-        .bn-link span{font-size:0.65rem}
-        .bn-link.bn-primary{color:#4F7BFF;font-weight:600}
-        .bn-link:hover{color:#ffffff}
-        @media(min-width:769px){.bottom-nav{display:none}}
-
-</style>
+    </style>
 </body>
 
 </html>
